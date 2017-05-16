@@ -46,7 +46,7 @@ public class riskFactorFilUpload
 		p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/Behavioral_Risk_Factor_Data__Heart_Disease___Stroke_Prevention.csv")).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM))
 		.apply(BigQueryIO.Write
 				.named("Writeing to Big Querry")
-				.to("healthcare-12:health_care_data.Behavioral_Risk_Factor_Data__Heart_Disease2")
+				.to("healthcare-12:health_care_data.Behavioral_Risk_Factor_Data__Heart_Disease")
 				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
 				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
 		p.run();
