@@ -30,7 +30,7 @@ public class riskFactorFilUpload
 			String csvData = c.element();
 			Parser parser = new Parser();
 			RiskFactor riskFactorObject = parser.getRiskFactorData(csvData);
-			TableRow row = new TableRow().set("Year", riskFactorObject.getYear()).set("Location", riskFactorObject.getLocation()).set("Category",riskFactorObject.getCategory())
+			TableRow row = new TableRow().set("Year", riskFactorObject.getYear()).set("Location",riskFactorObject.getCategory()).set("Category",riskFactorObject.getLocation())
 					.set("Topic",riskFactorObject.getTopic());
 			c.output(row);
 		}
