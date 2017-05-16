@@ -51,7 +51,7 @@ public class Parser {
 			Year= Integer.parseInt(data[0]) ;
 		}
 		String Location = data[2];
-		String Category = data[8] ;
+		String Category = csvData ;
 		String Topic = data[9] ;
 		riskFactorObject.setCategory(Category);
 		riskFactorObject.setLocation(Location);
