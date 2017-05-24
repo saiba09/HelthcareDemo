@@ -36,9 +36,9 @@ public class IOTdataFetch {
 		Pipeline p = Pipeline.create(options);
 		
 		Query query;
-		p.apply(DatastoreIO.v1().read().withProjectId("healthcare-12").withQuery( query)).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM)).apply(TextIO.Write.named("Writeing to File")
-				.to("healthcare-12:health_care_data.500_cities_local_data_for_better_health2"));
-		p.run();
+//		p.apply(DatastoreIO.v1().read().withProjectId("healthcare-12").withQuery( query)).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM)).apply(TextIO.Write.named("Writeing to File")
+//				.to("healthcare-12:health_care_data.500_cities_local_data_for_better_health2"));
+//		p.run();
 
 	}
 }
