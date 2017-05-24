@@ -103,7 +103,7 @@ public class MedicationOrderEntry
 		options.setProject("healthcare-12");
 		options.setStagingLocation("gs://mihin-data/staging12");
 		Pipeline p = Pipeline.create(options);
-		p.apply(TextIO.Read.from("gs://mihin-data/formatedMedicationOrderEntry.json")).apply(ParDo.named("Applying Transformations").of(MUTATION_TRANSFORM))
+		p.apply(TextIO.Read.from("gs://mihin-data/formatedMedicationOrder_entry.json")).apply(ParDo.named("Applying Transformations").of(MUTATION_TRANSFORM))
 		.apply(BigQueryIO.Write
 				.named("Write")
 				.to("healthcare-12:Mihin_Data_Sample.MedicationOrderEntry")
