@@ -59,4 +59,5 @@ public class Parser {
 		riskFactorObject.setYear(Year);
 		return riskFactorObject;
 	}
+	
 }
