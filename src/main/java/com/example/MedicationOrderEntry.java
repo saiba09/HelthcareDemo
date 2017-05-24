@@ -106,7 +106,7 @@ public class MedicationOrderEntry
 		p.apply(TextIO.Read.from("gs://mihin-data/formatedMedicationOrderEntry.json")).apply(ParDo.named("Applying Transformations").of(MUTATION_TRANSFORM))
 		.apply(BigQueryIO.Write
 				.named("Write")
-				.to("healthcare-12:Mihin_Data_Sample.Encounter_Entry")
+				.to("healthcare-12:Mihin_Data_Sample.MedicationOrderEntry")
 				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
 				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
 		p.run();
