@@ -125,7 +125,10 @@ public class SynpufData
 								Iterable<String[]> summary = e.getValue().getAll(tag1);
 								for (String[] string : summary) {
 									state_code = string[2];
-									age =today.getWeekYear() - Integer.parseInt(string[1].substring(0, 4));
+									if (! string[1].equals(null)) {
+										age =today.getWeekYear() - Integer.parseInt(string[1].substring(0, 4));
+									}
+									
 									if (string[1].equals("Y")) {
 										esrd = false;
 									}
