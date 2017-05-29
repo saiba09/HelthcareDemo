@@ -112,7 +112,7 @@ public class SynpufData
 						new DoFn<KV<String, CoGbkResult>, TableRow>() {
 							@Override
 							public void processElement(ProcessContext c) {
-							/*	KV<String, CoGbkResult> e = c.element();
+								KV<String, CoGbkResult> e = c.element();
 								Iterable<String> claims = e.getValue().getAll(tag2);
 								int count = 0 , age =0; 
 								Calendar today = Calendar.getInstance();
@@ -134,11 +134,11 @@ public class SynpufData
 									cancer_present = Boolean.parseBoolean(string[4]);
 								} 
 								TableRow row = new TableRow().set("patient_id", e.getKey()).set("age",age).set("state_code",state_code)
-										.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("no_of_times_patient_visited" , count)
-										.set("cancer_present",cancer_present); */
-								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
-										.set("esrd", false).set("chorinic_disease_present", true).set("count" , 2)
-										.set("cancer_present",true);
+										.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("count" , count)
+										.set("cancer_present",cancer_present); 
+//								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
+//										.set("esrd", false).set("chorinic_disease_present", true).set("count" , 2)
+//										.set("cancer_present",true);
 								c.output(row);
 							}
 
