@@ -97,8 +97,8 @@ public class SynpufData
 		options.setProject("healthcare-12");
 		options.setStagingLocation("gs://mihin-data/staging12");
 		Pipeline p = Pipeline.create(options);
-		PCollection<String> benneficiarySummaryFile = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/Behavioral_Risk_Factor_Data__Heart_Disease___Stroke_Prevention.csv"));
-		PCollection<String> inPatientClaimsFile = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/Behavioral_Risk_Factor_Data__Heart_Disease___Stroke_Prevention.csv"));
+		PCollection<String> inPatientClaimsFile = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_to_2010_Inpatient_Claims_Sample_1.csv"));
+		PCollection<String> benneficiarySummaryFile  = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv"));
 		PCollection<KV<String,String[]>> patientDetailsFromBS = benneficiarySummaryFile.apply(ParDo.named("Processing File").of(SUMMARY_TRANSFORM));
 		PCollection<KV<String,String>> patientDetailsFromIP = inPatientClaimsFile.apply(ParDo.named("Processing File").of(INPATIENT_TRANSFORM));
 		
