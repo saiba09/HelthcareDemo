@@ -46,6 +46,7 @@ public class SynpufData
 		}
 
 	};
+
 	static final DoFn<String, KV<String, String[]>> SUMMARY_TRANSFORM = new DoFn<String, KV<String , String[]>>() {
 		private static final long serialVersionUID = 1L;
 
@@ -89,7 +90,7 @@ public class SynpufData
 
 
 	};
-	
+
 	public static void main(String[] args) 
 	{
 		DataflowPipelineOptions  options = PipelineOptionsFactory.create().as(DataflowPipelineOptions.class);
@@ -101,52 +102,56 @@ public class SynpufData
 		PCollection<String> benneficiarySummaryFile  = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv"));
 		PCollection<KV<String,String[]>> patientDetailsFromBS = benneficiarySummaryFile.apply(ParDo.named("Processing Summary File").of(SUMMARY_TRANSFORM));
 		PCollection<KV<String,String>> patientDetailsFromIP = inPatientClaimsFile.apply(ParDo.named("Processing Inpatient File").of(INPATIENT_TRANSFORM));
-		
+
 		PCollection<KV<String, CoGbkResult>> coGbkResultCollection =KeyedPCollectionTuple.of(tag1, patientDetailsFromBS).and(tag2, patientDetailsFromIP)
-			                         .apply(CoGroupByKey.<String>create());
-		
-		
+				.apply(CoGroupByKey.<String>create());
+
+
 		PCollection<TableRow> finalResultCollection =
-			    coGbkResultCollection.apply(ParDo.of(
-			      new DoFn<KV<String, CoGbkResult>, TableRow>() {
-			        @Override
-			        public void processElement(ProcessContext c) {
-			          KV<String, CoGbkResult> e = c.element();Iterable<String> claims = e.getValue().getAll(tag2);
-					    int count = 0 , age =0; 
-					    Calendar today = Calendar.getInstance();
-					    String patient_id, state_code = null,chronic_cond;
-						boolean esrd = false;
-					    boolean chorinic_disease_present = false , cancer_present = false ;
-						for (String string : claims) {
-							count++;
-						}
-						Iterable<String[]> summary = e.getValue().getAll(tag1);
-						for (String[] string : summary) {
-							state_code = string[2];
-							age =today.getWeekYear() - Integer.parseInt(string[1].substring(0, 4));
-							if (string[1].equals("Y")) {
-								esrd = false;
+				coGbkResultCollection.apply(ParDo.named("Processing into table format").of(
+						new DoFn<KV<String, CoGbkResult>, TableRow>() {
+							@Override
+							public void processElement(ProcessContext c) {
+							/*	KV<String, CoGbkResult> e = c.element();
+								Iterable<String> claims = e.getValue().getAll(tag2);
+								int count = 0 , age =0; 
+								Calendar today = Calendar.getInstance();
+								String patient_id, state_code = null,chronic_cond;
+								boolean esrd = false;
+								boolean chorinic_disease_present = false , cancer_present = false ;
+								for (String string : claims) {
+									count++;
+								}
+								Iterable<String[]> summary = e.getValue().getAll(tag1);
+								for (String[] string : summary) {
+									state_code = string[2];
+									age =today.getWeekYear() - Integer.parseInt(string[1].substring(0, 4));
+									if (string[1].equals("Y")) {
+										esrd = false;
+									}
+
+									chorinic_disease_present = Boolean.parseBoolean(string[3]);
+									cancer_present = Boolean.parseBoolean(string[4]);
+								} 
+								TableRow row = new TableRow().set("patient_id", e.getKey()).set("age",age).set("state_code",state_code)
+										.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("no_of_times_patient_visited" , count)
+										.set("cancer_present",cancer_present); */
+								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
+										.set("esrd", false).set("chorinic_disease_present", true).set("no_of_times_patient_visited" , 2)
+										.set("cancer_present",true);
+								c.output(row);
 							}
-				
-							chorinic_disease_present = Boolean.parseBoolean(string[3]);
-							cancer_present = Boolean.parseBoolean(string[4]);
-						}
-						TableRow row = new TableRow().set("patient_id", e.getKey()).set("age",age).set("state_code",state_code)
-								.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("no_of_times_patient_visited" , count)
-								.set("cancer_present",cancer_present);
-						c.output(row);
-					}
 
 
-				}));
-				
+						}));
+
 		//		.apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM))
 		finalResultCollection.apply(BigQueryIO.Write
-						.named("Writeing to Big Querry")
-						.to("healthcare-12:synpuf_data.synpufData")
-						.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
-						.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
-				p.run();
+				.named("Writeing to Big Querry")
+				.to("healthcare-12:synpuf_data.synpufData")
+				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
+				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
+		p.run();
 
 	}
 
