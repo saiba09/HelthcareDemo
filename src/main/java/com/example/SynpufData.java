@@ -61,9 +61,9 @@ public class SynpufData
 			value[1] = data[5]; // ESRD
 			value[2] = data[6]; // state code
 			if(data[12].equals("1") || data[13].equals("1") || data[14].equals("1")||data[15].equals("1")||data[16].equals("1")||data[17].equals("1")||data[18].equals("1")||data[19].equals("1")||data[20].equals("1")||data[21].equals("1")||data[22].equals("1") ){
-				value[4] = "true"; // chronic disease present or not
+				value[3] = "true"; // chronic disease present or not
 			}
-			value[5] = data[15].equals("1") ? "true" : "false"; // cancer present or not
+			value[4] = data[15].equals("1") ? "true" : "false"; // cancer present or not
 			KV<String, String[]> map =KV.of(key, value);
 			c.output(map);
 		}
@@ -99,8 +99,8 @@ public class SynpufData
 		Pipeline p = Pipeline.create(options);
 		PCollection<String> inPatientClaimsFile = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_to_2010_Inpatient_Claims_Sample_1.csv"));
 		PCollection<String> benneficiarySummaryFile  = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv"));
-		PCollection<KV<String,String[]>> patientDetailsFromBS = benneficiarySummaryFile.apply(ParDo.named("Processing File").of(SUMMARY_TRANSFORM));
-		PCollection<KV<String,String>> patientDetailsFromIP = inPatientClaimsFile.apply(ParDo.named("Processing File").of(INPATIENT_TRANSFORM));
+		PCollection<KV<String,String[]>> patientDetailsFromBS = benneficiarySummaryFile.apply(ParDo.named("Processing Summary File").of(SUMMARY_TRANSFORM));
+		PCollection<KV<String,String>> patientDetailsFromIP = inPatientClaimsFile.apply(ParDo.named("Processing Inpatient File").of(INPATIENT_TRANSFORM));
 		
 		PCollection<KV<String, CoGbkResult>> coGbkResultCollection =KeyedPCollectionTuple.of(tag1, patientDetailsFromBS).and(tag2, patientDetailsFromIP)
 			                         .apply(CoGroupByKey.<String>create());
@@ -128,8 +128,8 @@ public class SynpufData
 								esrd = false;
 							}
 				
-							chorinic_disease_present = Boolean.getBoolean(string[4]);
-							cancer_present = Boolean.getBoolean(string[4]);
+							chorinic_disease_present = Boolean.parseBoolean(string[3]);
+							cancer_present = Boolean.parseBoolean(string[4]);
 						}
 						TableRow row = new TableRow().set("patient_id", e.getKey()).set("age",age).set("state_code",state_code)
 								.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("no_of_times_patient_visited" , count)
