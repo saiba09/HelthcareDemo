@@ -137,7 +137,7 @@ public class SynpufData
 										.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("no_of_times_patient_visited" , count)
 										.set("cancer_present",cancer_present); */
 								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
-										.set("esrd", false).set("chorinic_disease_present", true).set("no_of_times_patient_visited" , 2)
+										.set("esrd", false).set("chorinic_disease_present", true).set("count" , 2)
 										.set("cancer_present",true);
 								c.output(row);
 							}
