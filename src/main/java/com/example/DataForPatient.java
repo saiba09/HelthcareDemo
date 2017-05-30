@@ -22,11 +22,11 @@ public class DataForPatient
 			CSVParser csvParser = new CSVParser();
 			String data[] = csvParser.parseLine(csvData);
 		
-			int age = 0;
+		//	int age = 0;
 //			 Date today  = new Date();
 //		        Date d = new Date(data[2]);
 //		       age = ( today.getYear() - d.getYear() );
-			TableRow row = new TableRow().set("patient_id", data[0]).set("name",data[1]).set("age",age).set("provider_type",data[12]).set("prescription_count",Integer.parseInt(data[32]))
+			TableRow row = new TableRow().set("patient_id", data[0]).set("name",data[1]).set("dateOfbirth",data[2]).set("provider_type",data[12]).set("prescription_count",Integer.parseInt(data[32]))
 			.set("claim_type",data[4]).set("diagnosis_code",(data[5])).set("procedure_code",data[6]).set("place_of_service",data[8]).set("service_description",data[10]);
 			c.output(row);
 		}
