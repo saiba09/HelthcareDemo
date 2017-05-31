@@ -67,17 +67,17 @@ public class RiskCalculator {
 				if (strings[1].equalsIgnoreCase("20")) {
 					erVisitCount ++;
 				}
-				if (true) {
+				if (isCombrid(strings[2])) {
 					comorbidDiagnosisCount++;
 				} 
-				if (strings[1].equalsIgnoreCase("11") &&  true) {
+				if (strings[1].equalsIgnoreCase("11") && isCombrid(strings[2])) {
 					hospitwithComorbidConCount++;
 				}
-				if (strings[1].equalsIgnoreCase("20")  &&  true) {
+				if (strings[1].equalsIgnoreCase("20")  &&  isCombrid(strings[2]) ){
 					erVisitwithComorbidConCount ++;
 				}
 				if (true) {
-					isCancer = true;
+					isCancer = false;
 				}
 			}
 			value[0] = "" + uniquePrescriptionCount ; //
@@ -92,6 +92,18 @@ public class RiskCalculator {
 		}
 
 	}; 
+	public static Boolean isCombrid(String ICD){
+		if ((ICD.equalsIgnoreCase("278") ||ICD.equalsIgnoreCase("250.1") ||ICD.equalsIgnoreCase("250") || ICD.equalsIgnoreCase("401.1") || ICD.equalsIgnoreCase("493") || ICD.equalsIgnoreCase("491") || ICD.equalsIgnoreCase("492") || ICD.equalsIgnoreCase("490") || ICD.equalsIgnoreCase("494") || ICD.equalsIgnoreCase("496")  ) ) {
+			return true;
+		}
+		return false;
+	}
+	public static Boolean isSevere(String ICD){
+		if ((ICD.equalsIgnoreCase("795.71") ||ICD.equalsIgnoreCase("042") ||ICD.equalsIgnoreCase("286.52") || ICD.equalsIgnoreCase("V08") || ICD.equalsIgnoreCase("340") || ICD.equalsIgnoreCase("071")  ) ) {
+			return true;
+		}
+		return false;
+	}
 	public static void main(String[] args) 
 	{
 		DataflowPipelineOptions  options = PipelineOptionsFactory.create().as(DataflowPipelineOptions.class);
