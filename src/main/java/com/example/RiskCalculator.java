@@ -76,8 +76,8 @@ public class RiskCalculator {
 				if (strings[1].equalsIgnoreCase("20")  &&  isCombrid(strings[2]) ){
 					erVisitwithComorbidConCount ++;
 				}
-				if (true) {
-					isCancer = false;
+				if (strings[2].equalsIgnoreCase("v10")) {
+					isCancer = true;
 				}
 			}
 			value[0] = "" + uniquePrescriptionCount ; //

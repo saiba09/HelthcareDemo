@@ -29,7 +29,7 @@ public TableRow calculateScore(TableRow row){
 		riskLevel = 2;
 		level = "moderate";
 	}
-	else if(score >= 11 && score <= 20 ) {
+	else if(score >= 11  ) {//<=20
 		riskLevel = 3;
 		level = "high";
 	}

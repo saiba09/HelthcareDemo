@@ -39,11 +39,11 @@ public class DataForPatient
 		options.setProject("healthcare-12");
 		options.setStagingLocation("gs://mihin-data/staging12");
 		Pipeline p = Pipeline.create(options);
-		p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/claims.csv")).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM))
+		p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/GeneratedPatientData.csv")).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM))
 		.apply(BigQueryIO.Write
 				.named("Writeing to Big Querry")
 				.to("healthcare-12:Mihin_Data_Sample.patientDataSet")
-				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
+				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_APPEND)
 				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
 		p.run();
 
