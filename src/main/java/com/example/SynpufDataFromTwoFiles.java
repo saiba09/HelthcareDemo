@@ -3,34 +3,27 @@ import com.google.cloud.dataflow.sdk.Pipeline;
 import com.google.cloud.dataflow.sdk.io.TextIO;
 import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
 import com.google.cloud.dataflow.sdk.runners.BlockingDataflowPipelineRunner;
-import com.google.cloud.dataflow.sdk.options.Default;
-import com.google.cloud.dataflow.sdk.options.DefaultValueFactory;
-import com.google.cloud.dataflow.sdk.options.Description;
-import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 import com.google.cloud.dataflow.sdk.transforms.DoFn;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
 import com.google.cloud.dataflow.sdk.transforms.join.CoGbkResult;
 import com.google.cloud.dataflow.sdk.transforms.join.CoGroupByKey;
 import com.google.cloud.dataflow.sdk.transforms.join.KeyedPCollectionTuple;
-import com.google.cloud.dataflow.sdk.util.gcsfs.GcsPath;
 import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
 import com.google.cloud.dataflow.sdk.values.TupleTag;
-import com.google.type.Date;
 import com.opencsv.CSVParser;
 import com.util.Parser;
 import com.dao.RiskFactor;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.cloud.dataflow.sdk.io.BigQueryIO;
-import com.google.cloud.dataflow.sdk.options.Validation;
-import com.google.cloud.dataflow.sdk.transforms.Count;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-public class SynpufData
+/*
+ * using two sources in dataFlow
+ * coJoin operation
+ * */
+public class SynpufDataFromTwoFiles
 {
-	private static long row_id = 0;
 	final static TupleTag<String[]> tag1 = new TupleTag<String[]>();
 	final static  TupleTag<String> tag2 = new TupleTag<String>();
 	static final DoFn<String, TableRow> MUTATION_TRANS12FORM = new DoFn<String, TableRow>() {
@@ -125,9 +118,9 @@ public class SynpufData
 								Iterable<String[]> summary = e.getValue().getAll(tag1);
 								for (String[] string : summary) {
 									state_code = string[2];
-									
-									
-									
+
+
+
 									if (string[1].equals("Y")) {
 										esrd = false;
 									}
@@ -138,9 +131,9 @@ public class SynpufData
 								TableRow row = new TableRow().set("patient_id", e.getKey()).set("age",age).set("state_code",state_code)
 										.set("esrd", esrd).set("chorinic_disease_present", chorinic_disease_present).set("count" , count)
 										.set("cancer_present",cancer_present); 
-//								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
-//										.set("esrd", false).set("chorinic_disease_present", true).set("count" , 2)
-//										.set("cancer_present",true);
+								//								TableRow row = new TableRow().set("patient_id", "123").set("age",12).set("state_code","IND")
+								//										.set("esrd", false).set("chorinic_disease_present", true).set("count" , 2)
+								//										.set("cancer_present",true);
 								c.output(row);
 							}
 

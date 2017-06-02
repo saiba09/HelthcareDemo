@@ -3,32 +3,16 @@ import com.google.cloud.dataflow.sdk.Pipeline;
 import com.google.cloud.dataflow.sdk.io.TextIO;
 import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
 import com.google.cloud.dataflow.sdk.runners.BlockingDataflowPipelineRunner;
-import com.google.cloud.dataflow.sdk.options.Default;
-import com.google.cloud.dataflow.sdk.options.DefaultValueFactory;
-import com.google.cloud.dataflow.sdk.options.Description;
-import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 import com.google.cloud.dataflow.sdk.transforms.DoFn;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
-import com.google.cloud.dataflow.sdk.util.gcsfs.GcsPath;
-import com.google.cloud.dataflow.sdk.values.PCollection;
-import com.opencsv.CSVParser;
 
-import java.io.FileReader;
-import java.io.IOException;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.cloud.dataflow.sdk.io.BigQueryIO;
-import com.google.cloud.dataflow.sdk.options.Default;
-import com.google.cloud.dataflow.sdk.options.Description;
-import com.google.cloud.dataflow.sdk.options.Validation;
-import com.google.cloud.dataflow.sdk.transforms.Count;
-import java.io.IOException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
 public class MedicationOrderEntry
 {
 	static final DoFn<String, TableRow> MUTATION_TRANSFORM = new DoFn<String, TableRow>() {
@@ -43,7 +27,7 @@ public class MedicationOrderEntry
 			String practitioner_id;
 			String encounter_id;
 			JSONParser parser = new JSONParser();
-			 try {
+			try {
 				Object object = parser.parse(line);
 				JSONObject jsonObject = (JSONObject) object;
 				JSONArray resource = (JSONArray) jsonObject.get("resources"); 
@@ -54,11 +38,11 @@ public class MedicationOrderEntry
 					HashMap<String, String> map2   =  (HashMap<String, String>) jsonObject1.get("resource");
 					String medicationId = map2.get("id").toString();
 					HashMap<String, JSONObject> map   =  (HashMap<String, JSONObject>) jsonObject1.get("resource");
-//					System.out.println(map);
+					//					System.out.println(map);
 					medicationOrder_id = (medicationId);
 					HashMap<String, String> encounterObject = (JSONObject) (map.get("encounter"));
 					String encounterReference = (encounterObject.get("reference"));
-					 encounter_id = encounterReference.substring(encounterReference.indexOf('/')+1);
+					encounter_id = encounterReference.substring(encounterReference.indexOf('/')+1);
 					if(! map.containsKey("prescriber")){
 						continue;
 					}
@@ -68,8 +52,8 @@ public class MedicationOrderEntry
 					practitioner_id = (prescriber_id);
 					HashMap<String, String> patientObject = (JSONObject) (map.get("patient"));
 					String patientReference = (patientObject.get("reference"));
-			        patient_id = patientReference.substring(patientReference.indexOf('/')+1);
-				
+					patient_id = patientReference.substring(patientReference.indexOf('/')+1);
+
 					if(!map.containsKey("medicationCodeableConcept")){
 						continue;
 					}
@@ -78,21 +62,21 @@ public class MedicationOrderEntry
 						String medication = (medicationObject.get("text"));
 						medicationCodeableConcept_text = medication.substring(medication.indexOf(':')+1);
 					}
-					
+
 					HashMap<String, JSONArray> medicationObject2 =  (map.get("medicationCodeableConcept"));
 					JSONArray coding  = (medicationObject2.get("coding"));
-					
-			 		JSONObject codingObject  = (JSONObject) parser.parse((coding.get(0)).toString());
-			 		String medicationCode = codingObject.get("code").toString();
-			 		medicationCodeableConcept_id = (medicationCode);
-			 		TableRow row = new TableRow().set("encounter_id", encounter_id).set("medicationOrder_id", medicationOrder_id).set("patient_id",patient_id).set("practitioner_id",practitioner_id)
-			 				.set("medicationCodeableConcept_id",medicationCodeableConcept_id).set("medicationCodeableConcept_text",medicationCodeableConcept_text);
+
+					JSONObject codingObject  = (JSONObject) parser.parse((coding.get(0)).toString());
+					String medicationCode = codingObject.get("code").toString();
+					medicationCodeableConcept_id = (medicationCode);
+					TableRow row = new TableRow().set("encounter_id", encounter_id).set("medicationOrder_id", medicationOrder_id).set("patient_id",patient_id).set("practitioner_id",practitioner_id)
+							.set("medicationCodeableConcept_id",medicationCodeableConcept_id).set("medicationCodeableConcept_text",medicationCodeableConcept_text);
 					c.output(row);
-					}
-			 }
-			 catch(Exception e){
-				 e.printStackTrace();
-			 }
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 
 	}; 
@@ -110,7 +94,7 @@ public class MedicationOrderEntry
 				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
 				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
 		p.run();
-		
+
 	}
 
 }

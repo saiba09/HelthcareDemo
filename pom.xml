@@ -78,6 +78,7 @@
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
         </configuration>
         <dependencies>
+
         
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
