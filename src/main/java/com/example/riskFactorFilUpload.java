@@ -40,7 +40,7 @@ public class riskFactorFilUpload
 	{
 		DataflowPipelineOptions  options = PipelineOptionsFactory.create().as(DataflowPipelineOptions.class);
 		options.setRunner(BlockingDataflowPipelineRunner.class);
-		options.setProject("healthcare-12");
+		options.setProject("dummyproject-05042017");
 		options.setStagingLocation("gs://mihin-data/staging12");
 		Pipeline p = Pipeline.create(options);
 		p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/Behavioral_Risk_Factor_Data__Heart_Disease___Stroke_Prevention.csv")).apply(ParDo.named("Processing File").of(MUTATION_TRANSFORM))

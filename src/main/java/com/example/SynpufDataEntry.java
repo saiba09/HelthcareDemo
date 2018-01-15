@@ -31,13 +31,13 @@ public class SynpufDataEntry
 	{
 		DataflowPipelineOptions  options = PipelineOptionsFactory.create().as(DataflowPipelineOptions.class);
 		options.setRunner(BlockingDataflowPipelineRunner.class);
-		options.setProject("healthcare-12");
-		options.setStagingLocation("gs://mihin-data/staging12");
+		options.setProject("dummyproject-05042017");
+		options.setStagingLocation("gs://healthcare_demo_stagging/staging12");
 		Pipeline p = Pipeline.create(options);
-		p.apply(TextIO.Read.from("gs://synpuf_data/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv")).apply(ParDo.named("Loading to BigQuery").of(MUTATION_TRANSFORM))
+		p.apply(TextIO.Read.from("gs://healthcare-demo/DE1_0_2008_Beneficiary_Summary_File_Sample_1.csv")).apply(ParDo.named("Loading to BigQuery").of(MUTATION_TRANSFORM))
 		.apply(BigQueryIO.Write
 				.named("Write")
-				.to("healthcare-12:Mihin_Data_Sample.Synpuf_data_bene_summary")
+				.to("dummyproject-05042017:healthcare_demo.Synpuf_data_bene_summary")
 				.withWriteDisposition(BigQueryIO.Write.WriteDisposition.WRITE_TRUNCATE)
 				.withCreateDisposition(BigQueryIO.Write.CreateDisposition.CREATE_NEVER));
 		p.run();

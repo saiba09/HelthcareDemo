@@ -88,7 +88,7 @@ public class SynpufDataFromTwoFiles
 	{
 		DataflowPipelineOptions  options = PipelineOptionsFactory.create().as(DataflowPipelineOptions.class);
 		options.setRunner(BlockingDataflowPipelineRunner.class);
-		options.setProject("healthcare-12");
+		options.setProject("dummyproject-05042017");
 		options.setStagingLocation("gs://mihin-data/staging12");
 		Pipeline p = Pipeline.create(options);
 		PCollection<String> inPatientClaimsFile = p.apply(TextIO.Read.named("Fetching File from Cloud").from("gs://healthcare-12/DE1_0_2008_to_2010_Inpatient_Claims_Sample_1.csv"));
